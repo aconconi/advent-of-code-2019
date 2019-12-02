@@ -4,6 +4,7 @@
 from math import floor
 
 # read input file and load data into array of integers
+# expecting one integer per line
 with open("data/day01.dat", "r") as data_file:
         data = [int(line.strip()) for line in data_file]
 

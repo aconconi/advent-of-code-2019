@@ -2,23 +2,22 @@
 # Day 2: 1202 Program Alarm
 
 # read input file into an array of integers
-# expecting just 1 line of comma separated integers
+# expecting just one line of comma separated integers
 with open("data/day02.dat", "r") as data_file:
     data = [int(x) for x in data_file.read().split(",")]
 
-def run_program(p):
+def run_program(m):
     x = 0
-    while(p[x] != 99):
-        # print("x:", x, "p:", p, "p[x]:", p[x])
-        if p[x] == 1:
-            p[ p[x+3] ] = p[ p[x+1] ] + p[ p[x+2] ]
-        elif p[x] == 2:
-            p[ p[x+3] ] = p[ p[x+1] ] * p[ p[x+2] ]
+    while m[x] != 99:
+        if m[x] == 1:
+            m[ m[x+3] ] = m[ m[x+1] ] + m[ m[x+2] ]
+        elif m[x] == 2:
+            m[ m[x+3] ] = m[ m[x+1] ] * m[ m[x+2] ]
         else:
             print("Invalid opcode found.")
             exit(1)
         x += 4
-    return p
+    return m
 
 # Some test cases
 def test_run_program():
