@@ -1,7 +1,7 @@
 # Advent of Code 2019
 # Day 2: 1202 Program Alarm
 
-# read input file and load data into array of integers
+# read input file into an array of integers
 # expecting just 1 line of comma separated integers
 with open("data/day02.dat", "r") as data_file:
     data = [int(x) for x in data_file.read().split(",")]
