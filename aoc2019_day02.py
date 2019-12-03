@@ -7,12 +7,13 @@ with open("data/day02.dat", "r") as data_file:
     data = [int(x) for x in data_file.read().split(",")]
 
 def run_program(m):
-    x = 0
+    x = 0  # instruction pointer
     while m[x] != 99:
-        if m[x] == 1:
-            m[ m[x+3] ] = m[ m[x+1] ] + m[ m[x+2] ]
-        elif m[x] == 2:
-            m[ m[x+3] ] = m[ m[x+1] ] * m[ m[x+2] ]
+        opcode, a, b, c = m[x], m[x+1], m[x+2], m[x+3]
+        if opcode == 1:
+            m[c] = m[a] + m[b]
+        elif opcode == 2:
+            m[c] = m[a] * m[b]
         else:
             print("Invalid opcode found.")
             exit(1)
@@ -29,7 +30,7 @@ def test_run_program():
     assert run_program([1,1,1,4,99,5,6,0,99]) == [30,1,1,4,2,5,6,0,99]
 
 def day02part1(data, noun, verb):
-    memory = data.copy()
+    memory = data.copy()  # always perform a memory reset
     memory[1] = noun
     memory[2] = verb
     run_program(memory)
@@ -38,9 +39,8 @@ def day02part1(data, noun, verb):
 def day02part2(data, target):
     for noun in range(100):
         for verb in range(100):
-            r = day02part1(data, noun, verb)
-            if r == target:
-                return r
+            if day02part1(data, noun, verb) == target:
+                return 100 * noun + verb
     print("day02part2: could not find solution.")
     exit(1)    
 
