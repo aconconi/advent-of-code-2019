@@ -1,7 +1,5 @@
 # Advent of Code 2019
-# Day 3: Sunny with a Chance of Asteroids
-
-import operator
+# Day 5: Sunny with a Chance of Asteroids
 
 # read input file into a list of integers
 # expecting just one line of comma separated integers
@@ -32,7 +30,7 @@ def run_program(memory, input_value):
         full_opcode = str(m[x]).zfill(5)  # pad string with 0 so that it's always 5 digits
         opcode = int(full_opcode[3:])     # opcode is two rightmost digits
         if opcode in [1,2]:
-            # Sum or Multiply
+            # Operation: sum or multiply
             a, b, c = deref_par(1), deref_par(2), read_par(3)
             m[c] = a + b if opcode == 1 else a * b
             x += 4

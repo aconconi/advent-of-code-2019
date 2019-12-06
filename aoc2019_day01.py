@@ -6,7 +6,7 @@ from math import floor
 # read input file and load data into array of integers
 # expecting one integer per line
 with open("data/day01.dat", "r") as data_file:
-        data = [line.strip()) for line in data_file]
+        data = [line.strip() for line in data_file]
 
 # to find the fuel required for a module,
 # take its mass, divide by three, round down, and subtract 2.
