@@ -31,11 +31,11 @@ def overlay_pixel(p,c):
     # 0 is black, 1 is white, and 2 is transparent.
     return c if p == '2' else p
 
-def day01part1(data, w, h):
+def day08part1(data, w, h):
     fewest = min(chunker(data, w*h), key=lambda x: x.count('0'))
     return fewest.count('1') * fewest.count('2')
 
-def day01part2(data, w, h):
+def day08part2(data, w, h):
     canvas = '2' * w *  h
     layers = [x for x in chunker(data, w*h)]
     for layer in reversed(layers):
