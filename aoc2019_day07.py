@@ -56,8 +56,8 @@ class IntComputer():
                 self.output_buffer.append(a)  
                 self.pc += 2
                 # if stepping, give back control after output
-                if self.stepping:
-                    return False
+                # if self.stepping:
+                return a
             elif opcode == 5:
                 # Operation: jump-if-true
                 a, b = deref_par(1), deref_par(2)
@@ -79,8 +79,9 @@ class IntComputer():
             else:
                 print("Invalid opcode found.")
                 exit(1)
-
-        return True
+                
+        # program terminated
+        return None
 
 
 # read input file into a list of integers
@@ -93,31 +94,24 @@ def thruster_signal(program, phases):
     r = 0
     for f in phases:
         amp = IntComputer(program.copy(), [f, r])
-        amp.run()
-        r = amp.pop_output()
+        r = amp.run()
+        # r = amp.pop_output()
     return r
 
 def feedback_loop(program, phases):
     # set up context for each amplifier 
     amps = [ IntComputer(program, [f]) for f in phases]
     signal = 0
-    for i,a in cycle(enumerate(amps)):
+    for a in cycle(amps):
         if signal != None:
             a.append_input(signal)
-        
         # print("-> amp i:",i," pc:", a.pc, " in:", a.input_buffer, " out:", a.output_buffer, "fo:", a.command)
-        
         if a.input_buffer:
-            a.step()
-            # print("<- amp i:",i," pc:", a.pc, " in:", a.input_buffer, " out:", a.output_buffer, "fo:", a.command)
-            # program paused after output
-            new_signal = a.pop_output()
-
+            new_signal = a.step()
             if new_signal:
                 signal = new_signal
             else:
                 return signal
-
 
 def day07part1(program):
     return max([thruster_signal(program, phases) for phases in permutations([0,1,2,3,4])])
