@@ -7,12 +7,11 @@ from itertools import chain
 
 Point = namedtuple('Point', 'x y')
 
-size =0
 asteroids = set()
+
 # read input file and generate asteroids
 with open("data/day10.dat", "r") as data_file:
     for y,line in enumerate(data_file):
-        size = len(line)
         for x,c in enumerate(line.strip()):
             if c == '#' or c == 'X':
                 asteroids.add(Point(x,y))
@@ -36,18 +35,17 @@ def between (p1, p2):
     else:
         return ( Point(x1,y) for y in range(y1+sy, y2, sy) )
 
-def between_with_end(p1, p2):
-    return chain(between(p1,p2), [p2])
 
-    
 def see_each_other(p1, p2):
     if p1 == p2 or {b for b in between(p1, p2)} & asteroids:
         return False
     else:
         return True
 
+
 def visibile_from(p):
     return [ a for a in asteroids if see_each_other(p, a) ]
+
 
 def can_see_how_many(p):
     return len(visibile_from(p))
@@ -55,12 +53,13 @@ def can_see_how_many(p):
 def find_station():
     return max(asteroids, key=lambda a: can_see_how_many(a))
 
-
 def day10part1():
     return max(can_see_how_many(a) for a in asteroids)
 
 
 # this is not needed, stashed for future use :-)
+# def between_with_end(p1, p2):
+#     return chain(between(p1,p2), [p2])
 #
 # def sweep(p, width, height):
 #     iter1 = ( Point(x, 0) for x in range(p.x, width) )
