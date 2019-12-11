@@ -32,8 +32,10 @@ WRITE = 1
 # }
 
 class IntComputer():
-    def __init__(self, program, input_values = []):
-        self.mem =  {i:v for i,v in enumerate(program)} 
+    def __init__(self, program, input_values):
+        self.mem = defaultdict(int)
+        for i,v in enumerate(program):
+            self.mem[i] = v 
         self.pc = 0
         self.relative_base = 0
         self.input_buffer = input_values
@@ -63,25 +65,25 @@ class IntComputer():
         return len(args)
     
     # Memory read/write
-    def mem_read(self, loc):
-        if loc < 0:
-            raise Exception("Invalid memory read from location:", loc)
-        return self.mem[loc] if loc in self.mem else 0
+    # def mem_read(self, loc):
+    #     if loc < 0:
+    #         raise Exception("Invalid memory read from location:", loc)
+    #     return self.mem[loc] if loc in self.mem else 0
 
-    def mem_write(self, loc, val):
-        if loc < 0:
-            raise Exception("Invalid memory write to location:", loc)
-        self.mem[loc] = val
+    # def mem_write(self, loc, val):
+    #     if loc < 0:
+    #         raise Exception("Invalid memory write to location:", loc)
+    #     self.mem[loc] = val
         
     # Operation functions
     def op_sum(self): # 1
-        self.mem_write(self.cx, self.ax + self.bx)
+        self.mem[self.cx] = self.ax + self.bx
         
     def op_mul(self): # 2
-        self.mem_write(self.cx, self.ax * self.bx)
+        self.mem[self.cx] = self.ax * self.bx
 
     def op_in(self): # 3
-        self.mem_write(self.ax, self.input_buffer.pop(0))
+        self.mem[self.ax] = self.input_buffer.pop(0)
     
     def op_out(self): # 4
         self.output_buffer.append(self.ax)
@@ -93,10 +95,10 @@ class IntComputer():
         self.pc = self.bx if self.ax == 0 else self.pc+3
 
     def op_lt(self): # 7
-        self.mem_write(self.cx, 1 if self.ax < self.bx else 0)
+        self.mem[self.cx] = 1 if self.ax < self.bx else 0
 
     def op_eq(self): # 8
-        self.mem_write(self.cx, 1 if self.ax == self.bx else 0)
+        self.mem[self.cx] = 1 if self.ax == self.bx else 0
 
     def op_adj(self): # 9
         self.relative_base += self.ax
@@ -135,22 +137,22 @@ class IntComputer():
     def r_par(self, i):
         # print("in r_par i", i, "self.command", self.command, "[3-1]", self.command[3-i]) 
         mode = self.command[3-i]
-        par  = self.mem_read(self.pc + i)
+        par  = self.mem[self.pc + i]
         if mode == POSITION:
             # Position mode
-            return self.mem_read(par)
+            return self.mem[par]
         elif mode == IMMEDIATE:
             # Immediate mode
             return par
         elif mode == RELATIVE:
             # Relative mode
-            return self.mem_read(self.relative_base + par)
+            return self.mem[self.relative_base + par]
         else:
             raise Exception("Unknown read mode: {mode}")
 
     def w_par(self, i):
         mode = self.command[3-i]
-        par  = self.mem_read(self.pc + i)
+        par  = self.mem[self.pc + i]
         if mode == POSITION:
             return par
         elif mode == IMMEDIATE:

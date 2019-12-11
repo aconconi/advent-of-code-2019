@@ -14,21 +14,21 @@ INC = { 'UP':    (0, -1),
 }
 
 def paint(program, start_col):
-    x, y = 0, 0
+    rx, ry = 0, 0
     direction = deque(['UP', 'LEFT', 'DOWN', 'RIGHT'])
     panels = defaultdict(lambda: BLACK)
 
-    panels[(x,y)] = start_col
-    computer = IntComputer(program)
+    panels[(rx,ry)] = start_col
+    computer = IntComputer(program, [])
 
     while True:
         # send camera data to computer inputs
-        computer.append_input( panels[(x,y)] )
+        computer.append_input( panels[(rx,ry)] )
             
         # get color from computer output
         if computer.step() == True:
             break
-        panels[(x,y)] = computer.pop_output()
+        panels[(rx,ry)] = computer.pop_output()
 
         # get rotation from computer output
         if computer.step() == True:
@@ -46,8 +46,8 @@ def paint(program, start_col):
             raise(f"Invalid rotation: {rot}")
 
         # step forward
-        x += INC[direction[0]][0]
-        y += INC[direction[0]][1]
+        rx += INC[direction[0]][0]
+        ry += INC[direction[0]][1]
        
     return panels
 
@@ -71,7 +71,7 @@ def day11part1(data):
 def day11part2(data):
     image = paint(data, WHITE)
 
-    # get negative extremes
+    # get extremes
     min_x = min(x for (x,y) in image.keys())
     min_y = min(y for (x,y) in image.keys())
     max_x = max(x for (x,y) in image.keys())
@@ -80,10 +80,9 @@ def day11part2(data):
     # shift panel coordinates and retain only white panels
     image = { (x - min_x, y - min_y) : v for (x, y), v in image.items() if v == WHITE}
  
+    # paint on canvas
     width =  abs(max_x - min_x) + 1
     height = abs(max_y - min_y) + 1
-
-    # paint on canvas
     canvas = [[" "] * (width) for _ in range(height)]
     for (x, y),_ in image.items():
         canvas[y + abs(min_y)][x + abs(min_x)] = "\u2588"
@@ -99,14 +98,10 @@ with open("data/day11.dat", "r") as data_file:
     data = [int(x) for x in data_file.read().split(",")]
 
 # Part 1
-# print("How many panels does it paint at least once?")
-# print(day11part1(data.copy())) # Correct answer is 1686
-# print("----------")
-# print(day11part1(data.copy())) # Correct answer is 1686
-# print("----------")
-# print(day11part1(data.copy())) # Correct answer is 1686
+print("How many panels does it paint at least once?")
+print(day11part1(data)) # Correct answer is 1686
 
-# # Part 2
+# Part 2
 print("After starting the robot on a single white panel instead, what registration identifier does it paint on your hull?")
 day11part2(data) # Correct answer is 
 
