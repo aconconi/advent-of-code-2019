@@ -40,12 +40,9 @@ class IntComputer():
         self.relative_base = 0
         self.input_buffer = input_values
         self.output_buffer = []
-        self.command = ""
-        self.opcode = 0
+        self.opcode = None
         self.ax = self.bx = self.cx = 0   
         self.stepping = False     
-        # self.ARITY = {99: 0, 1: 3, 2: 3, 3: 1, 4: 1, 5: 2, 6: 2, 7: 3, 8: 3, 9: 1}
-        self.steps = 0
 
         self.OPERATIONS = {
             OP_ADD: ( self.op_sum, [READ, READ, WRITE] ), #1
@@ -116,6 +113,7 @@ class IntComputer():
 
     # Parameters functions
     def load_registers(self):
+        self.ax = self.bx = self.cx = None
         if self.opcode in [OP_ADD, OP_MUL, OP_LT, OP_EQ]: #1,2,7,8
             self.ax = self.r_par(1)
             self.bx = self.r_par(2)
@@ -135,23 +133,19 @@ class IntComputer():
             raise Exception("Invalid opcode: {opcode}")
 
     def r_par(self, i):
-        # print("in r_par i", i, "self.command", self.command, "[3-1]", self.command[3-i]) 
-        mode = self.command[3-i]
+        mode = str(self.mem[self.pc]).zfill(5)[3-i]  # pad string with 0 so that it's always 5 digits
         par  = self.mem[self.pc + i]
         if mode == POSITION:
-            # Position mode
             return self.mem[par]
         elif mode == IMMEDIATE:
-            # Immediate mode
             return par
         elif mode == RELATIVE:
-            # Relative mode
             return self.mem[self.relative_base + par]
         else:
             raise Exception("Unknown read mode: {mode}")
 
     def w_par(self, i):
-        mode = self.command[3-i]
+        mode = str(self.mem[self.pc]).zfill(5)[3-i]  # pad string with 0 so that it's always 5 digits
         par  = self.mem[self.pc + i]
         if mode == POSITION:
             return par
@@ -169,11 +163,8 @@ class IntComputer():
    
     def run(self):
         while self.mem[self.pc] != OP_HALT:
-            self.steps += 1
             prev_pc = self.pc
-            self.command = str(self.mem[self.pc]).zfill(5)  # pad string with 0 so that it's always 5 digits
-            self.opcode  = int(self.command[3:])   # opcode is two rightmost digits
-            # print("IntComputer step", self.steps, "command", self.command[3:], self.command[2], self.command[1], self.command[0])
+            self.opcode = self.mem[self.pc] % 100
             if self.opcode in self.OPERATIONS:
                 self.load_registers()
                 self.OPERATIONS[self.opcode][0]()
