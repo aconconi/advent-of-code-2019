@@ -65,10 +65,12 @@ class IntComputer():
                 raise Exception("Invalid memory write to location:", loc)
             self.mem[loc] = val
 
+        i = 0
         while self.mem[self.pc] != 99:
             self.command = str(self.mem[self.pc]).zfill(5)  # pad string with 0 so that it's always 5 digits
             opcode = int(self.command[3:])   # opcode is two rightmost digits
-            # print(self.command[3:], self.command[2], self.command[1], self.command[0])
+            i += 1
+            # print("step", i, "command", self.command[3:], self.command[2], self.command[1], self.command[0])
             if opcode in [1,2]:
                 # Operation: sum or multiply
                 a, b, c = par(1), par(2), w_par(3)
