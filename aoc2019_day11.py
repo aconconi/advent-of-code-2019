@@ -43,7 +43,7 @@ def paint(program, start_col):
             # turn left
             direction.rotate(-1)
         else:
-            raise(f"Invalid rotation: {rot}")
+            raise Exception(f"Invalid rotation: {rot}")
 
         # step forward
         rx += INC[direction[0]][0]
@@ -69,22 +69,22 @@ def day11part1(data):
 #         print("".join(row))
 
 def day11part2(data):
-    image = paint(data, WHITE)
+    panels = paint(data, WHITE)
 
     # get extremes
-    min_x = min(x for (x,y) in image.keys())
-    min_y = min(y for (x,y) in image.keys())
-    max_x = max(x for (x,y) in image.keys())
-    max_y = max(y for (x,y) in image.keys())
+    min_x = min(x for (x,y) in panels.keys())
+    min_y = min(y for (x,y) in panels.keys())
+    max_x = max(x for (x,y) in panels.keys())
+    max_y = max(y for (x,y) in panels.keys())
  
     # shift panel coordinates and retain only white panels
-    image = { (x - min_x, y - min_y) : v for (x, y), v in image.items() if v == WHITE}
+    panels = { (x - min_x, y - min_y) : col for (x, y), col in panels.items() if col == WHITE}
  
     # paint on canvas
     width =  abs(max_x - min_x) + 1
     height = abs(max_y - min_y) + 1
     canvas = [[" "] * (width) for _ in range(height)]
-    for (x, y),_ in image.items():
+    for (x, y),_ in panels.items():
         canvas[y + abs(min_y)][x + abs(min_x)] = "\u2588"
 
     # print canvas
