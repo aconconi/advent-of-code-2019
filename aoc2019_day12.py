@@ -25,6 +25,7 @@ testdata1 = [ (-1,0,2), (2,-10,-7), (4,-8,8), (3,5,-1) ]
 # <x=9, y=-8, z=-3>
 testdata2 = [ (-8,-10,0), (5,5,10), (2,-7,3), (9,-8,-3)]
 
+
 class Moon():
     def __init__(self, pos):
         self.pos = pos
@@ -60,12 +61,8 @@ class Moon():
     def tot_energy(self):
         return self.pot_energy() * self.kin_energy() 
 
-    def offset(self, other):
-        return tuple(map(operator.sub, self.pos, other.pos))
-
 def lcm(a, b):
     return abs(a*b) // gcd(a, b)
-
 
 def tick(moons):
     # apply gravity
@@ -77,16 +74,15 @@ def tick(moons):
         m.apply_velocity()
 
 
-def day12part1(positions, steps):
-    moons = [Moon(p) for p in positions]
+def day12part1(data, steps):
+    moons = [Moon(p) for p in data]
     for _ in range(steps):
         tick(moons)        
     return sum(m.tot_energy() for m in moons)
 
 
-def day12part2(positions):
-    # create moons from list of positions
-    moons = [Moon(p) for p in positions]
+def day12part2(data):
+    moons = [Moon(p) for p in data]
 
     # write down initial positions
     initial_mem = [(m.pos, m.vel) for m in moons]    
@@ -107,7 +103,6 @@ def day12part2(positions):
             sy = i
         if [(z, vz) for ((_,_,z), (_,_,vz)) in mem] == initial_z and not sz:
             sz = i
-
         if sx and sy and sz:
             return lcm(lcm(sx, sy), sz)
 
@@ -122,5 +117,4 @@ print("What is the total energy in the system after simulating the moons?")
 print(day12part1(data, 1000)) # Correct answer is 10028         
 
 print("How many steps does it take to reach the first state that exactly matches a previous state?")
-print(day12part2(testdata2)) # Correct answer is 314610635824376
-
+print(day12part2(data)) # Correct answer is 314610635824376
