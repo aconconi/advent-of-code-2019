@@ -29,7 +29,9 @@ class IntComputer():
         self.ax = self.bx = self.cx = 0   
         self.stepping = False
         for i,v in enumerate(program):
-            self.mem[i] = v   
+            self.mem[i] = v
+            
+        self.expected_out = 0 
 
         self.OPERATIONS = {
             OP_ADD: ( self._op_sum, [READ, READ, WRITE] ), #1
@@ -150,8 +152,9 @@ class IntComputer():
             raise Exception(f"Unknown write mode: {mode}")
 
     # Execution functions
-    def step(self):
+    def step(self, expect = 1):
         self.stepping = True
+        self.expected_out = expect
         return self.run()
    
     def run(self):
@@ -169,7 +172,7 @@ class IntComputer():
                 self.pc += self.arity(self.opcode) + 1
             
             # if stepping, return after each output.
-            if self.stepping and self.opcode == OP_OUT:
+            if self.stepping and self.opcode == OP_OUT and len(self.output_buffer) == self.expected_out:
                 # print("returning after step")
                 return False
 
