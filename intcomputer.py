@@ -19,11 +19,13 @@ READ = 0
 WRITE = 1
 
 class IntComputer():
-    def __init__(self, program, input_values):
+    def __init__(self, program, input_buffer, input_function = None):
         self.mem = defaultdict(int)
         self.pc = 0
         self.relative_base = 0
-        self.input_buffer = input_values
+        self.input_buffer = input_buffer
+        self.input_function = input_function
+        self.input_buffer = input_buffer
         self.output_buffer = []
         self.opcode = None
         self.ax = self.bx = self.cx = 0   
@@ -69,7 +71,12 @@ class IntComputer():
         self.mem[self.cx] = self.ax * self.bx
 
     def _op_in(self): # 3
-        self.mem[self.ax] = self.input_buffer.pop(0)
+        if not self.input_buffer and self.input_function:
+            self.input_buffer.append(self.input_function())
+        d = self.input_buffer.pop(0)
+        if not isinstance(d, int):
+            raise Exception(f"Invalid input type:", d)
+        self.mem[self.ax] = d
     
     def _op_out(self): # 4
         self.output_buffer.append(self.ax)

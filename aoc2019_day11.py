@@ -103,5 +103,5 @@ print(day11part1(data)) # Correct answer is 1686
 
 # Part 2
 print("After starting the robot on a single white panel instead, what registration identifier does it paint on your hull?")
-day11part2(data) # Correct answer is 
+day11part2(data) # Correct answer is GARPKZUL
 

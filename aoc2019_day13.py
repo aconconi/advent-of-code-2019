@@ -2,7 +2,7 @@
 # Day 13: Care Package
 
 # from collections import defaultdict, deque
-from intcomputer_day13 import IntComputer
+from intcomputer import IntComputer
 
 # Tile id
 EMPTY = 0
