@@ -2,7 +2,7 @@
 # Day 13: Care Package
 
 # from collections import defaultdict, deque
-from intcomputer import IntComputer
+from intcomputer_day13 import IntComputer
 
 # Tile id
 EMPTY = 0
@@ -15,8 +15,8 @@ BALL  = 4
 TILE_ID = { EMPTY: '.', WALL: '@', BLOCK: '#', HPAD: '=', BALL: 'o' }
 
 # Joystick
-JOY_LEFT = -1,
-JOY_NEUTRAL = 0,
+JOY_LEFT = -1
+JOY_NEUTRAL = 0
 JOY_RIGHT = +1
 
 # read input file into a list of integers
@@ -46,33 +46,77 @@ def render(screen):
     # print canvas
     for row in canvas:
         print("".join(row))
-        
-        
-program = data.copy()
-# program[0] = 1
-# print(program[0])
-computer = IntComputer(program, [JOY_NEUTRAL])
-screen = {}
-score = 0
-blocks = 0
-while True:
-    if computer.step(3) == True:
-        break
-    x = computer.pop_output()
-    y = computer.pop_output()
-    t = computer.pop_output()
-    if t not in TILE_ID:
-        raise Exception(f"Invalid tile id: {t}")
-    if x == -1 and y ==0:
-        score = t 
-    else:
-        screen[(x,y)] = t
+
+# Part 1
+def day13part1(data):
+    program = data.copy()
+    computer = IntComputer(program, [])
+    screen = {}
     
-    if t == BLOCK:
-        blocks += 1
-    # print("--------------------------------------")
-render(screen)
+    while True:
+        if computer.step(3) == True:
+            break
+        x = computer.pop_output()
+        y = computer.pop_output()
+        t = computer.pop_output()
+        if t not in TILE_ID:
+            raise Exception(f"Invalid tile id: {t}")
+        else:
+            screen[(x,y)] = t
+
+    render(screen)
+    return len([t for t in screen.values() if t == BLOCK])
+
 
 # Part 1
 print("How many block tiles are on the screen when the game exits?")
-print(blocks) # Correct answer is 280
+print(day13part1(data)) # Correct answer is 280
+
+# Part 2
+
+def day13part2(data):
+    program = data.copy()
+    program[0] = 2
+    screen = {}
+    score = 0
+    ball_x = None
+    ball_y = None
+    pad_x = None
+    joy = JOY_NEUTRAL
+    
+    def read_joystick():
+        # print("Joystick read", joy)
+        return joy 
+
+    computer = IntComputer(program, [JOY_NEUTRAL], read_joystick)
+    
+    while True:
+        # read from computer
+        if computer.step(3) == True:
+            break # end program
+        x = computer.pop_output()
+        y = computer.pop_output()
+        t = computer.pop_output()
+        
+        if x == -1 and y ==0:
+            score = t
+        else:
+            screen[(x,y)] = t
+            if t == BALL:
+                ball_x = x
+                ball_y = y 
+            elif t == HPAD:
+                pad_x = x
+            
+        joy = JOY_NEUTRAL
+        if pad_x and ball_x:
+            if pad_x > ball_x:
+                joy = JOY_LEFT
+            elif pad_x < ball_x:
+                joy = JOY_RIGHT
+        
+    render(screen)
+    return score
+
+print("What is your score after the last block is broken?")
+print(day13part2(data)) # Correct answer is 13298

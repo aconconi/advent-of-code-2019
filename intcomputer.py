@@ -95,6 +95,8 @@ class IntComputer():
   
     # I/O functions
     def append_input(self, val):
+        if not isinstance(val, int):
+            raise Exception(f"Invalid input type: {val}")
         self.input_buffer.append(val)
 
     def pop_output(self):
