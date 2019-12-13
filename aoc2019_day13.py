@@ -80,7 +80,6 @@ def day13part2(data):
     screen = {}
     score = 0
     ball_x = None
-    ball_y = None
     pad_x = None
     joy = JOY_NEUTRAL
     
@@ -104,7 +103,6 @@ def day13part2(data):
             screen[(x,y)] = t
             if t == BALL:
                 ball_x = x
-                ball_y = y 
             elif t == HPAD:
                 pad_x = x
             
