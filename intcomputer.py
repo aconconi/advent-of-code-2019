@@ -100,15 +100,16 @@ class IntComputer():
     # Parameters functions
     def load_registers(self):
         args = [None] * 3
+        modes = str(self.mem[self.pc]).zfill(5)[:3]  # pad string with 0 so that it's always 5 digits
         for i, kind in enumerate(self.OPERATIONS[self.opcode][1]):
             if kind not in {READ,WRITE}:
                 raise Exception("Unknown kind: {kind}")
-            args[i] = self.r_par(i+1) if kind == READ else self.w_par(i+1)
+            args[i] = self.r_par(i+1, modes) if kind == READ else self.w_par(i+1, modes)
         (self.ax, self.bx, self.cx) = args  
         
 
-    def r_par(self, i):
-        mode = str(self.mem[self.pc]).zfill(5)[3-i]  # pad string with 0 so that it's always 5 digits
+    def r_par(self, i, modes):
+        mode = modes[3-i]
         par  = self.mem[self.pc + i]
         if mode == POSITION:
             return self.mem[par]
@@ -119,8 +120,8 @@ class IntComputer():
         else:
             raise Exception(f"Unknown read mode: {mode}")
 
-    def w_par(self, i):
-        mode = str(self.mem[self.pc]).zfill(5)[3-i]  # pad string with 0 so that it's always 5 digits
+    def w_par(self, i, modes):
+        mode = modes[3-i]
         par  = self.mem[self.pc + i]
         if mode == POSITION:
             return par
@@ -151,7 +152,7 @@ class IntComputer():
                  # increment pc only if it was not modified by an operation
                 self.pc += self.arity(self.opcode) + 1
             
-            # if stepping, return after each output.
+            # if stepping, return after each output
             if self.stepping and self.opcode == OP_OUT and len(self.output_buffer) == self.expected_out:
                 # print("returning after step")
                 return False
