@@ -106,12 +106,14 @@ def day13part2(data):
             elif t == HPAD:
                 pad_x = x
             
-        joy = JOY_NEUTRAL
+        # joy = JOY_NEUcTRAL
         if pad_x and ball_x:
             if pad_x > ball_x:
                 joy = JOY_LEFT
             elif pad_x < ball_x:
                 joy = JOY_RIGHT
+            else:
+                joy = JOY_NEUTRAL
         
     render(screen)
     return score
