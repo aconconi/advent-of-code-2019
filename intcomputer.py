@@ -23,7 +23,6 @@ class IntComputer():
         self.mem = defaultdict(int)
         self.pc = 0
         self.relative_base = 0
-        self.input_buffer = input_buffer
         self.input_function = input_function
         self.input_buffer = input_buffer
         self.output_buffer = []
@@ -52,17 +51,6 @@ class IntComputer():
         (_, args) = self.OPERATIONS[opcode]
         return len(args)
     
-    # Memory read/write
-    # def mem_read(self, loc):
-    #     if loc < 0:
-    #         raise Exception("Invalid memory read from location:", loc)
-    #     return self.mem[loc] if loc in self.mem else 0
-
-    # def mem_write(self, loc, val):
-    #     if loc < 0:
-    #         raise Exception("Invalid memory write to location:", loc)
-    #     self.mem[loc] = val
-        
     # Operation functions
     def _op_sum(self): # 1
         self.mem[self.cx] = self.ax + self.bx
@@ -118,23 +106,6 @@ class IntComputer():
             args[i] = self.r_par(i+1) if kind == READ else self.w_par(i+1)
         (self.ax, self.bx, self.cx) = args  
         
-        # if self.opcode in [OP_ADD, OP_MUL, OP_LT, OP_EQ]: #1,2,7,8
-            # self.ax = self.r_par(1)
-            # self.bx = self.r_par(2)
-            # self.cx = self.w_par(3)
-        # elif self.opcode == OP_IN:
-        #     self.ax = self.w_par(1)
-        # elif self.opcode == OP_OUT:             
-        #     self.ax = self.r_par(1)
-        # elif self.opcode in [OP_JT, OP_JF]:
-        #     self.ax = self.r_par(1)
-        #     self.bx = self.r_par(2)
-        # elif self.opcode == OP_ADJ:
-        #     self.ax = self.r_par(1)
-        # elif self.opcode == OP_HALT:
-        #     pass
-        # else:
-        #     raise Exception("Invalid opcode: {opcode}")
 
     def r_par(self, i):
         mode = str(self.mem[self.pc]).zfill(5)[3-i]  # pad string with 0 so that it's always 5 digits
@@ -188,3 +159,77 @@ class IntComputer():
         # program terminated
         self.stepping = False
         return True
+
+
+
+
+def tests():
+    
+    # Test cases from scul repo
+    program = [3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8]
+    IntComputer(program, [7]).run()
+    for i in [7, 8, 9]:
+        computer = IntComputer(program, [i])
+        computer.run()
+        assert computer.pop_output() == (i == 8)
+
+    program = [3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8]
+    for i in [7, 8, 9]:
+        computer = IntComputer(program, [i])
+        computer.run()        
+        assert computer.pop_output() == (i < 8)
+
+    program = [3, 3, 1108, -1, 8, 3, 4, 3, 99]
+    for i in [7, 8, 9]:
+        computer = IntComputer(program, [i])
+        computer.run()
+        assert computer.pop_output() == (i == 8)
+
+    program = [3, 3, 1107, -1, 8, 3, 4, 3, 99]
+    for i in [7, 8, 9]:
+        computer = IntComputer(program, [i])
+        computer.run()
+        assert (computer.pop_output() == (i < 8))
+
+    for i in [0, 1, -2]:
+        program = [3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9]
+        computer = IntComputer(program, [i])
+        computer.run()
+        assert (computer.pop_output() == (i != 0))
+        
+        program = [3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1]
+        computer = IntComputer(program, [i])
+        computer.run()
+        assert (computer.pop_output() == (i != 0))
+
+    program = [3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31, 1106, 0, 36, 98, 0, 0, 1002, 21, 125,
+               20, 4, 20, 1105, 1, 46, 104, 999, 1105, 1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99]
+    a = {7: 999, 8: 1000, 9: 1001}
+    for i in [7, 8, 9]:
+        computer = IntComputer(program, [i])
+        computer.run()
+        assert computer.pop_output() == a[i]
+    
+    
+    # Test cases from Day 9
+    
+    program = [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]
+    computer = IntComputer(program, [1])
+    computer.run()
+    assert computer.output_buffer == [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]
+    
+    program = [1102,34915192,34915192,7,4,7,99,0]
+    computer = IntComputer(program, [1])
+    computer.run()
+    assert len(str(computer.pop_output())) == 16 
+    
+    program = [104,1125899906842624,99]
+    computer = IntComputer(program, [1])
+    computer.run()
+    assert computer.output_buffer == [1125899906842624]
+        
+    print("IntComputer tests passed")
+
+
+if __name__ == '__main__':
+    tests()
