@@ -158,7 +158,6 @@ class IntComputer():
             
             # if stepping, return after each output
             if self.stepping and self.opcode == OP_OUT and len(self.output_buffer) == self.expected_out:
-                # print("returning after step")
                 return False
 
         # program terminated
