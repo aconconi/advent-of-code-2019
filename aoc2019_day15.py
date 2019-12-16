@@ -1,4 +1,4 @@
-# Advent of Code 2019
+ # Advent of Code 2019
 # Day 15: Oxygen System
 
 from intcomputer import IntComputer
@@ -44,12 +44,6 @@ def move_droid(d):
         raise Exception(f"Invalid status code: {r}")
     return r
 
-# def try_droid(d):
-#     r = move_droid(d)
-#     if move_droid(REVERSE[d]) != OK:
-#         raise Exception(f"Droid could not backtrack, something is wrong!")
-#     return r
-
 computer = IntComputer(data, [], lambda:print("mi ha chiamato"))
 origin = (0, 0)
 visited = set()
@@ -58,11 +52,8 @@ dist = {}
 grid[origin] = OK
 grid[0] = 0
 
-
 def depth_first_recursive(v, entrance, length):
     visited.add(v)
-
-    # explore adjacent nodes
     for d in DIRS:
         w = calc_adjacent(v, d)
         if w not in visited:
@@ -79,7 +70,7 @@ def depth_first_recursive(v, entrance, length):
         move_droid(REVERSE[entrance])
 
 # Part 1
-depth_first_recursive(origin, 0, 0)
+depth_first_recursive((origin), 0, 0)
 all_oxygen = [x for x in grid if grid[x] == OXYGEN]
 oxygen_loc = all_oxygen[0]
 print("What is the fewest number of movement commands required to move the\
@@ -87,23 +78,23 @@ repair droid from its starting position to the location of the oxygen system?")
 print(dist[oxygen_loc])  # Correct answer is 424
 
 
-def flood_fill(v, target, replacement, depth, max_fill_depth):
+def flood_fill(v, target, replacement, dist, max_dist_reached):
     # print(f"Visiting location {v} containing {grid[v]}")
-    if target == replacement:
-        return max_fill_depth
-    elif grid[v] != target:
-        return max_fill_depth
+    
+    if target == replacement or grid[v] != target:
+        pass
     else:
         # print(f"Painting location {v} from color {grid[v]} to {replacement} at depth {depth} with maxdepth {max_fill_depth}")
         grid[v] = replacement
-        if depth > max_fill_depth:
-            max_fill_depth = depth
-    for w in adjacents(v):
-        if w in grid:
-            d = flood_fill(w, target, replacement, depth+1, max_fill_depth)
-            if d > max_fill_depth:
-                max_fill_depth = d
-    return max_fill_depth
+        if dist > max_dist_reached:
+            max_dist_reached = dist
+        
+        for w in [z for z in adjacents(v) if z in grid]:
+            d = flood_fill(w, target, replacement, dist + 1, max_dist_reached)
+            if d > max_dist_reached:
+                max_dist_reached = d
+    
+    return max_dist_reached
 
 # Part 2
 print("How many minutes will it take to fill with oxygen?")
