@@ -3,7 +3,6 @@
 
 from collections import deque
 from itertools import chain, repeat, cycle
-from math import gcd
 
 with open("data/day16.dat", "r") as data_file:
         data = data_file.readline().strip()
@@ -24,6 +23,7 @@ def expand(pattern, n):
 def apply(pattern, signal):
     return abs( sum( s * p for s, p in zip(signal, cycle(rotate_left(pattern))) if  p) ) % 10
 
+
 def phase(signal):
     r = []
     for i in range(len(signal)):
@@ -38,17 +38,8 @@ def day16part1(signal_str, phases):
         signal = phase(signal)
     return list_to_string(signal)[:8]
 
-    # new = []
-    # print(f"pattern={pattern} len={len(pattern)} n={n}")
-    # for i, x in enumerate(pattern):
-    #     new.extend([z for z in repeat(x, n)])
-    #     print(f"step={i}  digit={x}  new={new}")
-    #     if len(new) > max_len:
-    #         new = new[:max_len]
-    #         break
-
-def mul(k, n):
-    return BASE_PATTERN[ (k % (n*4)) // n ]
+# def mul(k, n):
+#     return BASE_PATTERN[ (k % (n*4)) // n ]
 
 
 # We just need to add up all the digits from the current one to the end
