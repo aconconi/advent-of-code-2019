@@ -3,6 +3,7 @@
 
 from intcomputer import IntComputer
 from collections import defaultdict
+from itertools import combinations 
 
 ROBOT_DIRS = {'^', 'v', '<', '>'}
 SPACE = '.'
@@ -83,8 +84,32 @@ computer.run()
 print("After visiting every part of the scaffold at least once, how much dust does the vacuum robot report it has collected?")
 print(computer.output_buffer[-1]) # Correct answer is 578918
 
+
 # def suffix_tree(s):
-#     st = set()
-#     for i in enumerate(s):
-#         s.add(s[-i:])
+#     return {s[-i+1:] for i,_ in enumerate(s)}
+
+# print(suffix_tree('banana'))  
+
+
+# def compress2(s, x): # Use backtracking to compress string
+#     global f
+#     if len(s) == 0:
+#         f = x
+#         return
+#     for i in range(1, 6):
+#         t = s[:i]
+#         if t in x:
+#             compress(s[i:], x)
+#         elif len(x) < 3:
+#             compress(s[i:], x + [t])
+
+# def substrings(s, minlen = 1):
+#     return (s[x:y] for x, y in combinations( range(len(s) + 1), r = 2) if abs(y-x) >= minlen) 
+
+# # seq_main = encode(['A','B','A','C','A','B','C','B','C','B'])
+# path = '112311411233455112311434551143455114'
+# # path = seq_a + seq_b + seq_a + seq_c + seq_a + seq_b + seq_c + seq_b + seq_c + seq_b
+# sub = [s for s in substrings(path, 5) if path.count(s) >= 3]
+# for s in sub:
+#     print(s)
     

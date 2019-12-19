@@ -23,12 +23,12 @@ READ = 0
 WRITE = 1
 
 class IntComputer():
-    def __init__(self, program, input_buffer, input_function = None):
+    def __init__(self, program, input_buffer=None, input_function=None):
         self.mem = defaultdict(int)
         self.pc = 0
         self.relative_base = 0
         self.input_function = input_function
-        self.input_buffer = input_buffer
+        self.input_buffer = input_buffer or []
         self.output_buffer = []
         self.opcode = None
         self.ax = self.bx = self.cx = 0   
