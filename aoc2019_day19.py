@@ -36,7 +36,6 @@ def render(screen):
         print(j % 10, end='')
     print()
  
-   
 def probe(x, y):
     computer.__init__(data, [x, y])
     computer.run()
