@@ -87,12 +87,13 @@ class Nat(Node):
         if all( self.nodes[i].requesting for i in range(50) ):
             # network is idle
             if self.x and self.y:
-                self.nodes[0].append_input(self.x)
-                self.nodes[0].append_input(self.y)
                 if self.y in self.solution:
                     return self.y
                 else:
                     self.solution.add(self.y)
+                    self.nodes[0].append_input(self.x)
+                    self.nodes[0].append_input(self.y)
+
         return None
 
 def day23part1(data):
