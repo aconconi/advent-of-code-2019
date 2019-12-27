@@ -77,8 +77,8 @@ def num_adjacents2(pos, world):
     ans += [ world[x2, y2, z2] for x2, y2, z2 in adjacents2 ].count(BUG)
     
     # count on inner level
-    if (x, y) == (2, 1):
-        ans += [ world[(x2, 0, z+1)] for x2 in range(5) ].count(BUG)
+    if (x, y) == (2, 1): 
+        ans += [ world[(x2, 0, z+1)] for x2 in range(5) ].count(BUG) 
     elif (x, y) == (2, 3):
         ans += [ world[(x2, 4, z+1)] for x2 in range(5) ].count(BUG)
     elif (x, y) == (1, 2):
@@ -104,7 +104,7 @@ def evolve2(grid):
     # pad levels if necessary
     min_level = min(z for (_,_, z) in grid)
     max_level = max(z for (_,_, z) in grid)
-    print(f"min {min_level}  max {max_level}")
+    # print(f"min {min_level}  max {max_level}")
     
     if [ grid[(x, y, min_level)] for x in range(5) for y in range(5) ].count(BUG):
         for x in range(SIZE):
@@ -115,7 +115,6 @@ def evolve2(grid):
             for y in range(SIZE):
                 new[(x,y,max_level+1)] == EMPTY        
         
-
     for p in new:
         # print(f"assessing {p}")
         if grid[p] == BUG:
@@ -137,7 +136,7 @@ def day24part2(data, iterations):
         grid[(x, y, 0)] = data[p]
     
     for i in range(iterations):
-        print(f"Iteration {i}")
+        # print(f"Iteration {i}")
         grid = evolve2(grid)
     
     return [grid[p] for p in grid].count(BUG)
