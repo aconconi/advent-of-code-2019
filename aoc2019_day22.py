@@ -6,14 +6,17 @@ from collections import deque
 FACTORY = [i for i in range(10007)]
 TEST = [i for i in range(10)]
 
+
 def deal_new(d):
     return list(reversed(d))
+
 
 def cut(d, n):
     new = deque(d)
     new.rotate(-n)
     return list(new)
-    
+
+
 def deal_increment(d, n):
     new = [-1] * len(d)
     for i in range(len(d)):
@@ -62,8 +65,8 @@ def apply(deck, program):
                 new = deal_new(new)
             else:
                 new = deal_increment(new, int(op[3]))
-        else:    
-            assert op[0] == 'cut'      
+        else:
+            assert op[0] == 'cut'
             new = cut(new, int(op[1]))
     return new
 
@@ -85,12 +88,12 @@ def apply_repeated(cards, program, shuffles):
             else:
                 # deal with increment
                 a *= inv(int(op[3]), cards)
-        else:    
-            # cut     
+        else:
+            # cut
             b += a * int(op[1])
-        a %= cards  
+        a %= cards
         b %= cards
-    
+
     increment = pow(a, shuffles, cards)
     offset = b * (1 - increment) * inv((1 - a) % cards, cards)
     offset %= cards
@@ -103,7 +106,7 @@ with open("data/day22.dat", "r") as data_file:
 # Part 1
 deck = apply(FACTORY, program)
 print("After shuffling your factory order deck of 10007 cards, what is the position of card 2019?")
-print(deck.index(2019)) # Correct answer is 6417
+print(deck.index(2019))  # Correct answer is 6417
 
 # Part 2
 cards = 119315717514047

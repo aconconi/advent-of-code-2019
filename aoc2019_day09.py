@@ -1,11 +1,10 @@
 # Advent of Code 2019
 # Day 9: Sensor Boost
 
-from itertools import permutations, cycle
 
 class IntComputer():
-    def __init__(self, program, input_values = []):
-        self.mem =  {i:v for i,v in enumerate(program)} 
+    def __init__(self, program, input_values=[]):
+        self.mem = {i: v for i, v in enumerate(program)}
         self.pc = 0
         self.relative_base = 0
         self.input_buffer = input_values
@@ -27,7 +26,7 @@ class IntComputer():
 
         def par(i):
             mode = self.command[3-i]
-            par  = mem_read(self.pc+i)
+            par = mem_read(self.pc+i)
             if mode == '0':
                 # Position mode
                 return mem_read(par)
@@ -42,13 +41,13 @@ class IntComputer():
 
         def w_par(i):
             mode = self.command[3-i]
-            par  = mem_read(self.pc+i)
+            par = mem_read(self.pc+i)
             if mode == '0':
                 # Position mode
                 return par
             elif mode == '1':
                 # Immediate mode
-                 raise Exception("Invalid write mode: {mode}")
+                raise Exception("Invalid write mode: {mode}")
             elif mode == '2':
                 # Relative mode
                 return self.relative_base + par
@@ -67,11 +66,12 @@ class IntComputer():
 
         i = 0
         while self.mem[self.pc] != 99:
-            self.command = str(self.mem[self.pc]).zfill(5)  # pad string with 0 so that it's always 5 digits
+            # pad string with 0 so that it's always 5 digits
+            self.command = str(self.mem[self.pc]).zfill(5)
             opcode = int(self.command[3:])   # opcode is two rightmost digits
             i += 1
             # print("step", i, "command", self.command[3:], self.command[2], self.command[1], self.command[0])
-            if opcode in [1,2]:
+            if opcode in [1, 2]:
                 # Operation: sum or multiply
                 a, b, c = par(1), par(2), w_par(3)
                 mem_write(c, a + b if opcode == 1 else a * b)
@@ -84,7 +84,7 @@ class IntComputer():
             elif opcode == 4:
                 # Operation: output
                 a = par(1)
-                self.output_buffer.append(a)  
+                self.output_buffer.append(a)
                 self.pc += 2
                 # if stepping, give back control after output
                 # if self.stepping:
@@ -114,7 +114,7 @@ class IntComputer():
             else:
                 print("Invalid opcode found:", opcode)
                 exit(1)
-                
+
         # program terminated
         return None
 
@@ -125,21 +125,23 @@ with open("data/day09.dat", "r") as data_file:
     data = [int(x) for x in data_file.read().split(",")]
 
 
-
 def day09part1(program):
     computer = IntComputer(program.copy(), [1])
     computer.run()
     return computer.output_buffer
+
 
 def day09part2(program):
     computer = IntComputer(program.copy(), [2])
     computer.run()
     return computer.output_buffer
 
+
 # Test cases for Part 1
-test_program1 = [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]
-test_program2 = [1102,34915192,34915192,7,4,7,99,0]
-test_program3 = [104,1125899906842624,99]
+test_program1 = [109, 1, 204, -1, 1001, 100, 1,
+                 100, 1008, 100, 16, 101, 1006, 101, 0, 99]
+test_program2 = [1102, 34915192, 34915192, 7, 4, 7, 99, 0]
+test_program3 = [104, 1125899906842624, 99]
 
 assert day09part1(test_program1) == test_program1
 assert len(str(day09part1(test_program2)[0])) == 16
@@ -147,12 +149,12 @@ assert day09part1(test_program3) == [1125899906842624]
 
 # Part 1
 print("What BOOST keycode does it produce?")
-print(day09part1(data)) # Correct answer is 3765554916
+print(day09part1(data))  # Correct answer is 3765554916
 
 # print(day09part1([9,4, 204,0, 99], [1000]))
 print("What are the coordinates of the distress signal?")
-print(day09part2(data)) # Correct answer is 76642
+print(day09part2(data))  # Correct answer is 76642
 
 # # Part 2
 # print("In feedback loop mode, what is the highest signal that can be sent to the thrusters?")
-# print(day07part2(data)) # Correct answer is 
+# print(day07part2(data)) # Correct answer is

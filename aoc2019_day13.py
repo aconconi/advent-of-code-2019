@@ -10,33 +10,34 @@ with open("data/day13.dat", "r") as data_file:
 
 # Tile id
 EMPTY = 0
-WALL  = 1
+WALL = 1
 BLOCK = 2
-HPAD  = 3
-BALL  = 4
+HPAD = 3
+BALL = 4
 
 # Tile rendering
-TILE_ID = { EMPTY: '.', WALL: '#', BLOCK: '=', HPAD: '-', BALL: 'o' }
+TILE_ID = {EMPTY: '.', WALL: '#', BLOCK: '=', HPAD: '-', BALL: 'o'}
 
 # Joystick
 JOY_LEFT = -1
 JOY_NEUTRAL = 0
 JOY_RIGHT = +1
 
+
 def render(screen):
-    min_x = min(x for (x,y) in screen.keys())
-    min_y = min(y for (x,y) in screen.keys())
-    max_x = max(x for (x,y) in screen.keys())
-    max_y = max(y for (x,y) in screen.keys())
-    
+    min_x = min(x for (x, y) in screen.keys())
+    min_y = min(y for (x, y) in screen.keys())
+    max_x = max(x for (x, y) in screen.keys())
+    max_y = max(y for (x, y) in screen.keys())
+
     if min_x < 0 or max_x < 0 or min_y < 0 or max_y < 0:
         raise Exception(f"Negative x coordinate in screen.")
- 
+
     # paint on canvas
-    width =  abs(max_x - min_x) + 1
+    width = abs(max_x - min_x) + 1
     height = abs(max_y - min_y) + 1
     canvas = [[" "] * (width) for _ in range(height)]
-    for (x, y),t in screen.items():
+    for (x, y), t in screen.items():
         canvas[y + abs(min_y)][x + abs(min_x)] = TILE_ID[t]
 
     # print canvas
@@ -44,11 +45,13 @@ def render(screen):
         print("".join(row))
 
 # Part 1
+
+
 def day13part1(data):
     program = data.copy()
     computer = IntComputer(program, [])
     screen = {}
-    
+
     while True:
         if computer.step(3) == True:
             break
@@ -58,7 +61,7 @@ def day13part1(data):
         if t not in TILE_ID:
             raise Exception(f"Invalid tile id: {t}")
         else:
-            screen[(x,y)] = t
+            screen[(x, y)] = t
 
     render(screen)
     return len([t for t in screen.values() if t == BLOCK])
@@ -72,26 +75,26 @@ def day13part2(data):
     ball_x = None
     pad_x = None
     joy = JOY_NEUTRAL
-    
+
     computer = IntComputer(program, [JOY_NEUTRAL], lambda: joy)
-    
+
     while True:
         # read from computer
         if computer.step(3) == True:
-            break # end program
+            break  # end program
         x = computer.pop_output()
         y = computer.pop_output()
         t = computer.pop_output()
-        
-        if x == -1 and y ==0:
+
+        if x == -1 and y == 0:
             score = t
         else:
-            screen[(x,y)] = t
+            screen[(x, y)] = t
             if t == BALL:
                 ball_x = x
             elif t == HPAD:
                 pad_x = x
-            
+
         if pad_x and ball_x:
             if pad_x > ball_x:
                 joy = JOY_LEFT
@@ -99,14 +102,15 @@ def day13part2(data):
                 joy = JOY_RIGHT
             else:
                 joy = JOY_NEUTRAL
-        
+
     render(screen)
     return score
 
+
 # Part 1
 print("How many block tiles are on the screen when the game exits?")
-print(day13part1(data)) # Correct answer is 280
+print(day13part1(data))  # Correct answer is 280
 
 # Part 2
 print("What is your score after the last block is broken?")
-print(day13part2(data)) # Correct answer is 13298
+print(day13part2(data))  # Correct answer is 13298

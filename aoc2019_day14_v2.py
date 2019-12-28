@@ -10,19 +10,20 @@ reacts = {}
 for line in input.split('\n'):
     print(line)
     lhs, rhs = line.split(' => ')
-    rq,rn = rhs.split(' ')
+    rq, rn = rhs.split(' ')
     ls = {}
     for lv in lhs.split(', '):
-        lvq,lvn = lv.split(' ')
+        lvq, lvn = lv.split(' ')
         ls[lvn] = int(lvq)
-    reacts[rn] = (int(rq),ls)
+    reacts[rn] = (int(rq), ls)
+
 
 def getore(fuel):
-    have = {k:0 for k in reacts}
-    need = {k:0 for k in reacts}
+    have = {k: 0 for k in reacts}
+    need = {k: 0 for k in reacts}
     have['ORE'] = need['ORE'] = 0
     need['FUEL'] = fuel
-    
+
     needed_quant = fuel
     while needed_quant > 0:
         for c in need:
@@ -40,8 +41,8 @@ def getore(fuel):
             needed_quant -= need[c]
             need[c] = 0
 
-    for k,v in need.items():
-        if k!='ORE' and v!=0:
+    for k, v in need.items():
+        if k != 'ORE' and v != 0:
             print('something wrong:', k, v)
 
     return need['ORE']

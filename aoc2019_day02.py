@@ -6,6 +6,7 @@
 with open("data/day02.dat", "r") as data_file:
     data = [int(x) for x in data_file.read().split(",")]
 
+
 def run_program(m):
     x = 0  # instruction pointer
     while m[x] != 99:
@@ -21,13 +22,18 @@ def run_program(m):
     return m
 
 # Some test cases
+
+
 def test_run_program():
     assert run_program([99]) == [99]
-    assert run_program([1,9,10,3,2,3,11,0,99,30,40,50]) == [3500,9,10,70,2,3,11,0,99,30,40,50]
-    assert run_program([1,0,0,0,99]) == [2,0,0,0,99]
-    assert run_program([2,3,0,3,99]) == [2,3,0,6,99]
-    assert run_program([2,4,4,5,99,0]) == [2,4,4,5,99,9801]
-    assert run_program([1,1,1,4,99,5,6,0,99]) == [30,1,1,4,2,5,6,0,99]
+    assert run_program([1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50]) == [
+        3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50]
+    assert run_program([1, 0, 0, 0, 99]) == [2, 0, 0, 0, 99]
+    assert run_program([2, 3, 0, 3, 99]) == [2, 3, 0, 6, 99]
+    assert run_program([2, 4, 4, 5, 99, 0]) == [2, 4, 4, 5, 99, 9801]
+    assert run_program([1, 1, 1, 4, 99, 5, 6, 0, 99]) == [
+        30, 1, 1, 4, 2, 5, 6, 0, 99]
+
 
 def day02part1(data, noun, verb):
     memory = data.copy()  # always perform a memory reset
@@ -35,14 +41,15 @@ def day02part1(data, noun, verb):
     memory[2] = verb
     run_program(memory)
     return memory[0]
- 
+
+
 def day02part2(data, target):
     for noun in range(100):
         for verb in range(100):
             if day02part1(data, noun, verb) == target:
                 return 100 * noun + verb
     print("day02part2: could not find solution.")
-    exit(1)    
+    exit(1)
 
 
 test_run_program()

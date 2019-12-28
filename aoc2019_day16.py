@@ -5,23 +5,27 @@ from collections import deque
 from itertools import chain, repeat, cycle
 
 with open("data/day16.dat", "r") as data_file:
-        data = data_file.readline().strip()
+    data = data_file.readline().strip()
 
 BASE_PATTERN = [0, 1, 0, -1]
-      
+
+
 def list_to_string(l):
     return "".join([str(x) for x in l])
+
 
 def rotate_left(a):
     d = deque(a)
     d.rotate(-1)
     return list(d)
 
+
 def expand(pattern, n):
     return list(chain.from_iterable(zip(*repeat(pattern, n))))
 
+
 def apply(pattern, signal):
-    return abs( sum( s * p for s, p in zip(signal, cycle(rotate_left(pattern))) if  p) ) % 10
+    return abs(sum(s * p for s, p in zip(signal, cycle(rotate_left(pattern))) if p)) % 10
 
 
 def phase(signal):
@@ -31,6 +35,7 @@ def phase(signal):
         # pattern = deque([p for p in [0, 1, 0, -1] for _ in range(i+1)])
         r.append(apply(pattern, signal))
     return r
+
 
 def day16part1(signal_str, phases):
     signal = [int(c) for c in signal_str]
@@ -66,7 +71,7 @@ assert day16part1('69317163492948606335995924319873', 100) == '52432133'
 
 # Part 1
 print("After 100 phases of FFT, what are the first eight digits in the final output list?")
-print(day16part1(data, 100)) # Correct answer is 73127523
+print(day16part1(data, 100))  # Correct answer is 73127523
 
 
 # Test cases for part 2
