@@ -41,7 +41,7 @@ def calc_adjacent(p, d):
 
 def move_droid(d):
     computer.append_input(d)
-    computer.step(1)
+    computer.step_until_output(1)
     r = computer.pop_output()
     if r not in STATUS_CODES:
         raise Exception(f"Invalid status code: {r}")

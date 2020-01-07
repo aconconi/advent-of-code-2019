@@ -149,11 +149,11 @@ assert day09part1(test_program3) == [1125899906842624]
 
 # Part 1
 print("What BOOST keycode does it produce?")
-print(day09part1(data))  # Correct answer is 3765554916
+print(day09part1(data)[0])  # Correct answer is 3765554916
 
 # print(day09part1([9,4, 204,0, 99], [1000]))
 print("What are the coordinates of the distress signal?")
-print(day09part2(data))  # Correct answer is 76642
+print(day09part2(data)[0])  # Correct answer is 76642
 
 # # Part 2
 # print("In feedback loop mode, what is the highest signal that can be sent to the thrusters?")

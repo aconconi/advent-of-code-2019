@@ -3,6 +3,7 @@
 from collections import defaultdict
 import unittest
 
+
 POSITION = '0'
 IMMEDIATE = '1'
 RELATIVE = '2'
@@ -23,16 +24,17 @@ WRITE = 1
 
 
 class IntComputer():
-    def __init__(self, program, input_buffer=None, input_function=None):
+    def __init__(self, program, input_buffer=None, input_function=None, output_function=None):
         self.mem = defaultdict(int)
         self.pc = 0
         self.relative_base = 0
         self.input_function = input_function
         self.input_buffer = input_buffer or []
         self.output_buffer = []
+        self.output_function = output_function
         self.opcode = None
         self.ax = self.bx = self.cx = 0
-        self.stepping = False
+        self.halted = None
         for i, v in enumerate(program):
             self.mem[i] = v
 
@@ -67,11 +69,14 @@ class IntComputer():
             self.input_buffer.append(self.input_function())
         d = self.input_buffer.pop(0)
         if not isinstance(d, int):
-            raise Exception(f"Invalid input type: {d}")
+            raise Exception(f"Invalid input type:", d)
         self.mem[self.ax] = d
 
     def _op_out(self):  # 4
-        self.output_buffer.append(self.ax)
+        if self.output_function:
+            self.output_function(self.ax)
+        else:
+            self.output_buffer.append(self.ax)
 
     def _op_jt(self):  # 5
         self.pc = self.bx if self.ax != 0 else self.pc+3
@@ -138,32 +143,31 @@ class IntComputer():
             raise Exception(f"Unknown write mode: {mode}")
 
     # Execution functions
-    def step(self, expect=1):
-        self.stepping = True
-        self.expected_out = expect
-        return self.run()
-
     def run(self):
-        while self.mem[self.pc] != OP_HALT:
-            prev_pc = self.pc
-            self.opcode = self.mem[self.pc] % 100
-            if self.opcode in self.OPERATIONS:
-                self.load_registers()
-                self.OPERATIONS[self.opcode][0]()
-            else:
-                raise Exception(f"Invalid opcode: {self.opcode}")
-
-            if self.pc == prev_pc:
-                # increment pc only if it was not modified by an operation
-                self.pc += self.arity(self.opcode) + 1
-
-            # if stepping, return after each output
-            if self.stepping and self.opcode == OP_OUT and len(self.output_buffer) == self.expected_out:
-                return False
-
-        # program terminated
-        self.stepping = False
+        while not self.step():
+            pass
         return True
+
+    def step_until_output(self, expect=1):
+        while not self.step():
+            if len(self.output_buffer) == expect:
+                return False
+        return True
+
+    def step(self):
+        prev_pc = self.pc
+        self.opcode = self.mem[self.pc] % 100
+        if self.opcode in self.OPERATIONS:
+            self.load_registers()
+            self.OPERATIONS[self.opcode][0]()
+        else:
+            raise Exception(f"Invalid opcode: {self.opcode}")
+
+        if self.pc == prev_pc:
+            # increment pc only if it was not modified by an operation
+            self.pc += self.arity(self.opcode) + 1
+
+        return True if self.opcode == OP_HALT else False
 
 
 class TestIntComputer(unittest.TestCase):

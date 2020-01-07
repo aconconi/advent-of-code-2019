@@ -27,12 +27,12 @@ def paint(program, start_col):
         computer.append_input(panels[(rx, ry)])
 
         # get color from computer output
-        if computer.step():
+        if computer.step_until_output():
             break
         panels[(rx, ry)] = computer.pop_output()
 
         # get rotation from computer output
-        if computer.step():
+        if computer.step_until_output():
             break
 
         # rotate
