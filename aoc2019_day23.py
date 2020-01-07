@@ -1,7 +1,7 @@
 # Advent of Code 2019
 # Day 23: Category Six
 
-from intcomputer_day23 import IntComputer
+from intcomputer import IntComputer
 
 # read input file into a list of integers
 # expecting just one line of comma separated integers

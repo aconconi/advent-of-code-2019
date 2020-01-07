@@ -53,7 +53,7 @@ def day13part1(data):
     screen = {}
 
     while True:
-        if computer.step(3) == True:
+        if computer.step_until_output(3) == True:
             break
         x = computer.pop_output()
         y = computer.pop_output()
@@ -80,7 +80,7 @@ def day13part2(data):
 
     while True:
         # read from computer
-        if computer.step(3) == True:
+        if computer.step_until_output(3) == True:
             break  # end program
         x = computer.pop_output()
         y = computer.pop_output()
