@@ -36,8 +36,11 @@ def bfs_graph(graph, start):
 
 
 def parent(tree, node):
-    result = [v for v in tree if node in tree[v]]
-    return result[0] if result else None
+    gen = (v for v in tree if node in tree[v])
+    try:
+        return next(gen)
+    except StopIteration:
+    	return None
 
 
 def ancestors(tree, node):

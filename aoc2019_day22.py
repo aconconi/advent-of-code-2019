@@ -18,9 +18,10 @@ def cut(d, n):
 
 
 def deal_increment(d, n):
-    new = [-1] * len(d)
-    for i in range(len(d)):
-        new[(i * n) % len(d)] = d[i]
+    l = len(d)
+    new = [-1] * l
+    for i in range(l):
+        new[(i * n) % l] = d[i]
     return new
 
 

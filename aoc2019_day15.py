@@ -95,7 +95,7 @@ def flood_fill(v, target, replacement, dist, max_dist_reached):
         if dist > max_dist_reached:
             max_dist_reached = dist
 
-        for w in [z for z in adjacents(v) if z in grid]:
+        for w in filter(lambda z: z in grid, adjacents(v)):
             d = flood_fill(w, target, replacement, dist + 1, max_dist_reached)
             if d > max_dist_reached:
                 max_dist_reached = d
